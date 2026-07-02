@@ -5,10 +5,14 @@ package com.hackathon.backend.dto;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
+public class StudentDTO {
 
-    public Integer ProductId;
-    public String ProductName;
-    public Double unitPrice;
-    public Integer stock;
+    private Integer studentId;
+    private String name;
+    private String lastName;
+    private String email;
+    private String address;
+    private Integer age;
+    private String dni;
+    private Boolean isActive;
 }
