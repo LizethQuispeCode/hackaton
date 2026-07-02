@@ -14,7 +14,7 @@ import { Auth } from '../../../core/services/auth';
 })
 export class LoginComponent {
 
-  username = '';
+  usemame = '';
   password = '';
 
   constructor(private router: Router, private authService: Auth) {}
@@ -22,7 +22,7 @@ export class LoginComponent {
   login() {
 
     this.authService.login({
-      usersname: this.usersname,
+      usemame: this.usemame,
       password: this.password
     }).subscribe(() => {
 

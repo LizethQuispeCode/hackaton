@@ -13,7 +13,7 @@ export class Auth {
 
   private url = `${environment.apiUrl}/api/Products/login`;
 
-  login(credentials: { usersname: string; password: string }): Observable<any> {
+  login(credentials: { usemame: string; password: string }): Observable<any> {
     return this.http.post<any>(this.url, credentials);
   }
 }

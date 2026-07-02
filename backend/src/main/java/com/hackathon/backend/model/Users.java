@@ -19,7 +19,7 @@ public class Users {
     @Column(name = "role_id")
     private Integer roleId;
 
-    @JsonAlias("usersname")
+    @JsonAlias("usemame")
     @Column(name = "username")
     private String username;
 

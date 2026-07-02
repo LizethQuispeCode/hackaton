@@ -2,15 +2,15 @@
     <h2>Iniciar Sesión</h2>
 
     <form #loginForm="ngForm" (ngSubmit)="loginForm.valid && login()" novalidate>
-        <label for="usersname">Usuario</label>
+        <label for="usemame">Usuario</label>
         <input
-            id="usersname"
-            name="usersname"
+            id="usemame"
+            name="usemame"
             type="text"
             placeholder="Usuario"
-            [(ngModel)]="usersname"
+            [(ngModel)]="usemame"
             required>
-        <small class="error" *ngIf="loginForm.submitted && !usersname">
+        <small class="error" *ngIf="loginForm.submitted && !usemame">
             El usuario es obligatorio.
         </small>
 

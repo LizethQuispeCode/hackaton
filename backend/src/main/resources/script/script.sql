@@ -28,7 +28,7 @@ GO
 CREATE TABLE Users(
     Users_id INT IDENTITY(1,1),
     role_id INT NOT NULL,
-    usersname VARCHAR(50) NOT NULL,
+    usemame VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(150) NOT NULL,
     email VARCHAR(120),
@@ -40,7 +40,7 @@ CREATE TABLE Users(
     updated_by VARCHAR(50),
 
     CONSTRAINT PK_Users PRIMARY KEY(Users_id),
-    CONSTRAINT UQ_usersname UNIQUE(usersname),
+    CONSTRAINT UQ_usersname UNIQUE(usemame),
     CONSTRAINT UQ_EMAIL UNIQUE(email),
 
     CONSTRAINT FK_Users_ROLES
@@ -196,7 +196,7 @@ GO
 
 --Users--
 
-INSERT INTO Users(role_id, usersname, password, full_name, email, phone)
+INSERT INTO Users(role_id, usemame, password, full_name, email, phone)
 VALUES
 (1, 'admin', '123456', 'Administrador General', 'admin@demo.com', '999999999'),
 (2, 'juan', '123456', 'Juan Perez', 'juan@demo.com', '987654321'),
