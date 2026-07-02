@@ -18,7 +18,8 @@ public class Users {
     @Column(name = "role_id")
     private Integer roleId;
 
-    @com.fasterxml.jackson.annotation.JsonAlias("username")
+    @com.fasterxml.jackson.annotation.JsonProperty("usemame")
+    @com.fasterxml.jackson.annotation.JsonAlias({"usemame", "usersname"})
     @Column(name = "usemame")
     private String usemame;
 
