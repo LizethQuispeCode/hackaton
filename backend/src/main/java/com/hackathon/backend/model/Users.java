@@ -1,6 +1,7 @@
 package com.hackathon.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,8 +16,9 @@ public class Users {
     @Column(name = "user_id")
     private Integer id;
 
+    @JsonAlias("usersname")
     @Column(name = "username")
-    private String usersname;
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -29,12 +31,12 @@ public class Users {
         this.id = id;
     }
 
-    public String getusersname() {
-        return usersname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setusersname(String usersname) {
-        this.usersname = usersname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

@@ -27,6 +27,6 @@ public interface ProductService {
 
     ByteArrayInputStream exportPDF();
 
-    Users login(String usersname, String password);
+    Users login(String username, String password);
 
 }
