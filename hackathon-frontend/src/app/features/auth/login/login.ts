@@ -14,7 +14,7 @@ import { Auth } from '../../../core/services/auth';
 })
 export class LoginComponent {
 
-  usersname = '';
+  username = '';
   password = '';
 
   constructor(private router: Router, private authService: Auth) {}
