@@ -74,12 +74,12 @@ public class ProductRest {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody(required = false) Users Users) {
 
-        if (Users == null || Users.getUsername() == null || Users.getPassword() == null
-                || Users.getUsername().isBlank() || Users.getPassword().isBlank()) {
-            return ResponseEntity.badRequest().body("Debe enviar username y password");
+        if (Users == null || Users.getUsemame() == null || Users.getPassword() == null
+                || Users.getUsemame().isBlank() || Users.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body("Debe enviar usemame y password");
         }
 
-        Users result = service.login(Users.getUsername().trim(), Users.getPassword());
+        Users result = service.login(Users.getUsemame().trim(), Users.getPassword());
 
         if (result != null) {
             return ResponseEntity.ok(result);

@@ -200,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Users login(String username, String password) {
-        return usersRepo.findByUsernameAndPassword(username, password);
+    public Users login(String usemame, String password) {
+        return usersRepo.findByUsemameAndPassword(usemame, password);
     }
 }
