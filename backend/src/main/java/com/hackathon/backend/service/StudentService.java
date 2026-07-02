@@ -17,3 +17,30 @@ public interface StudentService {
     void delete(Integer id);
 
 }
+
+
+
+
+
+
+
+package com.hackathon.backend.service;
+
+import com.hackathon.backend.dto.LicensePlateDTO;
+import com.hackathon.backend.dto.LicensePlateDetailDTO;
+
+import java.util.List;
+
+public interface LicensePlateService {
+
+    List<LicensePlateDetailDTO> findAll();
+
+    LicensePlateDetailDTO findById(Integer id);
+
+    LicensePlateDTO create(LicensePlateDTO dto);
+
+    LicensePlateDTO update(Integer id, LicensePlateDTO dto);
+
+    void delete(Integer id);
+
+}
