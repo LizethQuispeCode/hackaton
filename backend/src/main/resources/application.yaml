@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: hackathon-backend
+
+  datasource:
+    url: ${DB_URL:jdbc:sqlserver://localhost:1433;databaseName=HackathonDB;encrypt=true;trustServerCertificate=true}
+    username: ${DB_Users:sa}
+    password: ${DB_PASSWORD:Lizz12345!}
+    driver-class-name: ${DB_DRIVER:com.microsoft.sqlserver.jdbc.SQLServerDriver}
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${PORT:8080}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

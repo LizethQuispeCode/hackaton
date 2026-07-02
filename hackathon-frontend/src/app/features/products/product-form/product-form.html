@@ -1,0 +1,28 @@
+<h2>Product</h2>
+
+<form (ngSubmit)="save()">
+
+    <label>Name</label>
+
+    <input
+    type="text"
+    [(ngModel)]="product.productName"
+    name="productName">
+
+    <label>Price</label>
+
+    <input
+    type="number"
+    [(ngModel)]="product.unitPrice"
+    name="unitPrice">
+
+    <label>Stock</label>
+
+    <input
+    type="number"
+    [(ngModel)]="product.stock"
+    name="stock">
+
+    <button type="submit">Save</button>
+
+</form>

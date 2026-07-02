@@ -1,0 +1,27 @@
+# docker compose -f docker-compose-be.yml up -d
+
+#docker-compose -f docker-compose-be.yml up --build -d 
+# Se usa --build para reconstruir la imagen con los Products recientes. Si no lo usas, Docker usa una imagen guardada y no se actualiza tu código.
+# docker compose -f docker-compose-be.yml down
+version: '3.8'
+
+services:
+
+  backend:
+    build: ..
+    #image: lizethquispesuarez/springboot-sqlserver:1.0
+    container_name: hackathon-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: "jdbc:sqlserver://sqlhacka-db:1433;databaseName=HackathonDB;encrypt=true;trustServerCertificate=true"
+      DB_Users: "sa"
+      DB_PASSWORD: "Lizz12345!"
+      DB_DRIVER: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+      PORT: "8080"
+    networks:
+      - be-net
+
+networks:
+  be-net:
+    external: true
