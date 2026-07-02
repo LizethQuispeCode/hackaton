@@ -17,6 +17,8 @@ public class Users {
 
     @Column(name = "usersname")
     private String usersname;
+
+    @Column(name = "password")
     private String password;
 
     public Integer getId() {

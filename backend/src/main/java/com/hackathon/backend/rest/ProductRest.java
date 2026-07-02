@@ -72,9 +72,14 @@ public class ProductRest {
                 .body(file.readAllBytes());
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Users Users) {
+    public ResponseEntity<?> login(@RequestBody(required = false) Users Users) {
 
-        Users result = service.login(Users.getusersname(), Users.getPassword());
+        if (Users == null || Users.getusersname() == null || Users.getPassword() == null
+                || Users.getusersname().isBlank() || Users.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body("Debe enviar usersname y password");
+        }
+
+        Users result = service.login(Users.getusersname().trim(), Users.getPassword());
 
         if (result != null) {
             return ResponseEntity.ok(result);

@@ -1,28 +1,43 @@
 <h2>Product</h2>
 
-<form (ngSubmit)="save()">
-
-    <label>Name</label>
-
+<form #productForm="ngForm" (ngSubmit)="productForm.valid && save()" novalidate>
+    <label for="productName">Name</label>
     <input
-    type="text"
-    [(ngModel)]="product.productName"
-    name="productName">
+        id="productName"
+        type="text"
+        [(ngModel)]="product.productName"
+        name="productName"
+        #productNameModel="ngModel"
+        required>
+    <small class="error" *ngIf="productNameModel.invalid && (productNameModel.touched || productForm.submitted)">
+        El nombre es obligatorio.
+    </small>
 
-    <label>Price</label>
-
+    <label for="unitPrice">Price</label>
     <input
-    type="number"
-    [(ngModel)]="product.unitPrice"
-    name="unitPrice">
+        id="unitPrice"
+        type="number"
+        [(ngModel)]="product.unitPrice"
+        name="unitPrice"
+        #unitPriceModel="ngModel"
+        required
+        min="1">
+    <small class="error" *ngIf="unitPriceModel.invalid && (unitPriceModel.touched || productForm.submitted)">
+        El precio debe ser mayor que 0.
+    </small>
 
-    <label>Stock</label>
-
+    <label for="stock">Stock</label>
     <input
-    type="number"
-    [(ngModel)]="product.stock"
-    name="stock">
+        id="stock"
+        type="number"
+        [(ngModel)]="product.stock"
+        name="stock"
+        #stockModel="ngModel"
+        required
+        min="0">
+    <small class="error" *ngIf="stockModel.invalid && (stockModel.touched || productForm.submitted)">
+        El stock no puede estar vacío ni ser negativo.
+    </small>
 
-    <button type="submit">Save</button>
-
+    <button type="submit" [disabled]="productForm.invalid">Save</button>
 </form>
