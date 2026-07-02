@@ -1,206 +1,217 @@
-//Logica
 package com.hackathon.backend.service.impl;
 
-import com.hackathon.backend.dto.ProductDTO;
-import com.hackathon.backend.model.Product;
-import com.hackathon.backend.model.Users;
-import com.hackathon.backend.repository.ProductRepository;
-import com.hackathon.backend.repository.UsersRepository;
-import com.hackathon.backend.service.ProductService;
-import com.opencsv.CSVReader;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.hackathon.backend.dto.StudentDTO;
+import com.hackathon.backend.model.Students;
+import com.hackathon.backend.repository.StudentRepository;
+import com.hackathon.backend.service.StudentService;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class StudentServiceImpl implements StudentService {
 
-    private final ProductRepository repo;
-    private final UsersRepository usersRepo;
+    private final StudentRepository repo;
 
-    public ProductServiceImpl(ProductRepository repo, UsersRepository usersRepo) {
+    public StudentServiceImpl(StudentRepository repo) {
         this.repo = repo;
-        this.usersRepo = usersRepo;
     }
 
     @Override
-    public List<ProductDTO> findAll() {
-        return repo.findByStatusTrue()
+    public List<StudentDTO> findAll() {
+        return repo.findByIsActiveTrue()
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
     }
 
     @Override
-    public ProductDTO findById(Integer id) {
-        return repo.findById(id).map(this::mapToDTO).orElse(null);
+    public StudentDTO findById(Integer id) {
+        return repo.findById(id)
+                .map(this::mapToDTO)
+                .orElse(null);
     }
 
     @Override
-    public ProductDTO create(ProductDTO dto) {
+    public StudentDTO create(StudentDTO dto) {
 
-        Product p = new Product();
-        p.setProductName(dto.getProductName());
-        p.setUnitPrice(dto.getUnitPrice());
-        p.setStock(dto.getStock());
+        Students s = new Students();
 
-        //Auditoría
-        p.setCreatedAt(LocalDateTime.now());
-        p.setCreatedBy("SYSTEM");
+        s.setName(dto.getName());
+        s.setLastName(dto.getLastName());
+        s.setEmail(dto.getEmail());
+        s.setAddress(dto.getAddress());
+        s.setAge(dto.getAge());
+        s.setDni(dto.getDni());
 
-        repo.save(p);
+        s.setIsActive(true);
+        s.setCreatedAt(LocalDateTime.now());
 
-        return mapToDTO(p);
+        repo.save(s);
+
+        return mapToDTO(s);
     }
 
     @Override
-    public ProductDTO update(Integer id, ProductDTO dto) {
+    public StudentDTO update(Integer id, StudentDTO dto) {
 
-        Product p = repo.findById(id).orElseThrow();
+        Students s = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        p.setProductName(dto.getProductName());
-        p.setUnitPrice(dto.getUnitPrice());
-        p.setStock(dto.getStock());
+        s.setName(dto.getName());
+        s.setLastName(dto.getLastName());
+        s.setEmail(dto.getEmail());
+        s.setAddress(dto.getAddress());
+        s.setAge(dto.getAge());
+        s.setDni(dto.getDni());
 
-        //Auditoría
-        p.setUpdatedAt(LocalDateTime.now());
-        p.setUpdatedBy("SYSTEM");
+        s.setUpdatedAt(LocalDateTime.now());
 
-        repo.save(p);
+        repo.save(s);
 
-        return mapToDTO(p);
+        return mapToDTO(s);
     }
 
     @Override
     public void delete(Integer id) {
 
-        Product p = repo.findById(id).orElseThrow();
+        Students s = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        p.setStatus(false); //eliminación lógica
+        // eliminación lógica
+        s.setIsActive(false);
+        s.setDeletedAt(LocalDateTime.now());
 
-        repo.save(p);
+        repo.save(s);
     }
-    private ProductDTO mapToDTO(Product p) {
-        ProductDTO dto = new ProductDTO();
-        dto.setProductId(p.getProductId());
-        dto.setProductName(p.getProductName());
-        dto.setUnitPrice(p.getUnitPrice());
-        dto.setStock(p.getStock());
+
+    private StudentDTO mapToDTO(Students s) {
+
+        StudentDTO dto = new StudentDTO();
+
+        dto.setStudentId(s.getStudentId());
+        dto.setName(s.getName());
+        dto.setLastName(s.getLastName());
+        dto.setEmail(s.getEmail());
+        dto.setAddress(s.getAddress());
+        dto.setAge(s.getAge());
+        dto.setDni(s.getDni());
+
         return dto;
     }
-    @Override
-    public void importCSV(MultipartFile file) {
+}
 
-        try (Reader reader = new InputStreamReader(file.getInputStream());
-             CSVReader csvReader = new CSVReader(reader)) {
-            List<String[]> rows = csvReader.readAll();
 
-            for (int i = 1; i < rows.size(); i++) { // skip header
 
-                String[] row = rows.get(i);
 
-                Product p = new Product();
-                p.setProductName(row[0]);
-                p.setUnitPrice(Double.parseDouble(row[1]));
-                p.setStock(Integer.parseInt(row[2]));
-                p.setStatus(true);
-                p.setCreatedAt(LocalDateTime.now());
 
-                repo.save(p);
-            }
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error importing CSV");
-        }
-    }
-    @Override
-    public ByteArrayInputStream exportExcel() {
 
-        try (Workbook workbook = new XSSFWorkbook()) {
 
-            Sheet sheet = workbook.createSheet("Products");
 
-            Row header = sheet.createRow(0);
-            header.createCell(0).setCellValue("ID");
-            header.createCell(1).setCellValue("Name");
-            header.createCell(2).setCellValue("Price");
-            header.createCell(3).setCellValue("Stock");
+package com.hackathon.backend.service.impl;
 
-            List<Product> Products = repo.findAll();
+import com.hackathon.backend.dto.LicensePlateDTO;
+import com.hackathon.backend.dto.LicensePlateDetailDTO;
+import com.hackathon.backend.model.LicensePlates;
+import com.hackathon.backend.repository.LicensePlateRepository;
+import com.hackathon.backend.service.LicensePlateService;
 
-            int rowIdx = 1;
-            for (Product p : Products) {
-                Row row = sheet.createRow(rowIdx++);
+import org.springframework.stereotype.Service;
 
-                row.createCell(0).setCellValue(p.getProductId());
-                row.createCell(1).setCellValue(p.getProductName());
-                row.createCell(2).setCellValue(p.getUnitPrice());
-                row.createCell(3).setCellValue(p.getStock());
-            }
+import java.time.LocalDateTime;
+import java.util.List;
 
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            workbook.write(out);
+@Service
+public class LicensePlateServiceImpl implements LicensePlateService {
 
-            return new ByteArrayInputStream(out.toByteArray());
+    private final LicensePlateRepository repo;
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating Excel");
-        }
-    }
-    @Override
-    public ByteArrayInputStream exportPDF() {
-
-        try {
-
-            Document document = new Document();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-            PdfWriter.getInstance(document, out);
-
-            document.open();
-
-            document.add(new Paragraph("ProductS REPORT"));
-
-            PdfPTable table = new PdfPTable(3);
-            table.addCell("ID");
-            table.addCell("Name");
-            table.addCell("Price");
-
-            List<Product> Products = repo.findAll();
-
-            for (Product p : Products) {
-                table.addCell(String.valueOf(p.getProductId()));
-                table.addCell(p.getProductName());
-                table.addCell(String.valueOf(p.getUnitPrice()));
-            }
-
-            document.add(table);
-            document.close();
-
-            return new ByteArrayInputStream(out.toByteArray());
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating PDF");
-        }
+    public LicensePlateServiceImpl(LicensePlateRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public Users login(String usemame, String password) {
-        return usersRepo.findByUsemameAndPassword(usemame, password);
+    public List<LicensePlateDetailDTO> findAll() {
+        return repo.findByIsActiveTrue()
+                .stream()
+                .map(this::mapToDetailDTO)
+                .toList();
+    }
+
+    @Override
+    public LicensePlateDetailDTO findById(Integer id) {
+        return repo.findById(id)
+                .map(this::mapToDetailDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public LicensePlateDTO create(LicensePlateDTO dto) {
+
+        LicensePlates lp = new LicensePlates();
+
+        lp.setOrderCode(dto.getOrderCode());
+        lp.setStudentId(dto.getStudentId());
+        lp.setRaceId(dto.getRaceId());
+        lp.setCampusId(dto.getCampusId());
+        lp.setPromoter(dto.getPromoter());
+        lp.setPurchaseDate(dto.getPurchaseDate());
+
+        lp.setIsActive(true);
+        lp.setCreatedAt(LocalDateTime.now());
+
+        repo.save(lp);
+
+        return dto;
+    }
+
+    @Override
+    public LicensePlateDTO update(Integer id, LicensePlateDTO dto) {
+
+        LicensePlates lp = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("License plate not found"));
+
+        lp.setOrderCode(dto.getOrderCode());
+        lp.setStudentId(dto.getStudentId());
+        lp.setRaceId(dto.getRaceId());
+        lp.setCampusId(dto.getCampusId());
+        lp.setPromoter(dto.getPromoter());
+        lp.setPurchaseDate(dto.getPurchaseDate());
+
+        lp.setUpdatedAt(LocalDateTime.now());
+
+        repo.save(lp);
+
+        return dto;
+    }
+
+    @Override
+    public void delete(Integer id) {
+
+        LicensePlates lp = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("License plate not found"));
+
+        lp.setIsActive(false);
+        lp.setDeletedAt(LocalDateTime.now());
+
+        repo.save(lp);
+    }
+
+    private LicensePlateDetailDTO mapToDetailDTO(LicensePlates lp) {
+
+        LicensePlateDetailDTO dto = new LicensePlateDetailDTO();
+
+        dto.setLicensePlatesId(lp.getLicensePlatesId());
+        dto.setOrderCode(lp.getOrderCode());
+        dto.setPromoter(lp.getPromoter());
+        dto.setPurchaseDate(lp.getPurchaseDate());
+        dto.setStudentId(lp.getStudentId());
+        dto.setRaceId(lp.getRaceId());
+        dto.setCampusId(lp.getCampusId());
+
+        return dto;
     }
 }
